@@ -25,6 +25,7 @@ def chat_socket(ws):
         clients = ws.handler.server.clients.values()
         for client in clients:
             client.ws.send(message)
+            
 # [END gae_flex_websockets_app]
 
 @app.after_request
@@ -44,6 +45,7 @@ def my_webservice():
 
 @app.route('/put_debate', methods=['GET', 'POST'])
 def put_debate(debate_id, user, transcript):
+    '''
     ds = get_client()
     task_key = ds.key("debate") # unique ID for this entity
     task = datastore.Entity(key=task_key)
@@ -52,6 +54,11 @@ def put_debate(debate_id, user, transcript):
     task["transcript"] = transcript
     ds.put(task)
     return task
+    '''
+
+    ds = get_client()
+    task_key = ds.key("chatroom")
+    task = datastore.Entity(key=task_key)
 
 @app.route('/get_debate', methods=['GET', 'POST'])
 def get_debates():

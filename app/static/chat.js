@@ -12,14 +12,16 @@ window.onload = function() {
 
       /* Establish the WebSocket connection and register event handlers. */
       var websocket = new WebSocket(webSocketUri);
+      console.log(websocket.url);
 
       websocket.onopen = function() {
         console.log('Connected');
-        var signout = document.getElementById("signout").textContent.split(" ");
-        var user_name = signout[signout.length-1];
-        websocket.send(JSON.stringify([user_name, "has entered the chat"]))
+        setTimeout(function(){
+            var signout = document.getElementById("signout").textContent.split(" ");
+            window.user_name = signout[signout.length-1];
+            websocket.send(JSON.stringify([user_name, "has entered the chat"]))
+        }, 0);
       };
-
       websocket.onclose = function() {
         console.log('Closed');
       };
@@ -28,6 +30,7 @@ window.onload = function() {
         user_name = JSON.parse(e.data)[0];
         msg = JSON.parse(e.data)[1];
         console.log("Message received: " + e.data);
+        console.log(window.user_name);
         
         if(msg != "has entered the chat") {
             var name = document.createElement("div");
@@ -59,10 +62,13 @@ window.onload = function() {
             conv.append(name);
             conv.appendChild(bubble);
             conv.scrollTop = conv.scrollHeight;
-            document.getElementById("text-input").value = "";
+
+            if(msg == document.getElementById("text-input").value) {
+                document.getElementById("text-input").value = "";
+            }
 
             //Store chat in database
-            dbStore(window.debate_id, user_name, msg);
+            //dbStore(window.debate_id, user_name, msg);
             //dbRetrieve();
         }
         else {
@@ -75,6 +81,7 @@ window.onload = function() {
             bubble.innerHTML = user_name + " has entered the chat";
             conv.append(bubble);
         }
+        
       };
 
       websocket.onerror = function(e) {
@@ -85,9 +92,12 @@ window.onload = function() {
       window.debate_id = 1
       document.getElementById("send-btn").onclick = function fun(e) {
           e.preventDefault();
-          var signout = document.getElementById("signout").textContent.split(" ");
-          var user_name = signout[signout.length-1];
-          websocket.send( JSON.stringify([user_name, document.getElementById("text-input").value]));
+          msg = document.getElementById("text-input").value;
+          if(msg.trim() != "") {
+            var signout = document.getElementById("signout").textContent.split(" ");
+            var user_name = signout[signout.length-1];
+            websocket.send( JSON.stringify([user_name, msg]));
+          }
 		}
         
         document.getElementById("text-input")
@@ -100,7 +110,7 @@ window.onload = function() {
 }
 
 function dbStore(debate_id, user, transcript){
-    console.log("Stored: " + debate_id + " " + user + " " + transcript)
+    //console.log("Stored: " + debate_id + " " + user + " " + transcript)
     $.ajax({
         type: "GET",
         url: "/webservice",
@@ -117,7 +127,7 @@ function dbStore(debate_id, user, transcript){
 
 
 function dbRetrieve(){
-    console.log("Retrieved")
+    //console.log("Retrieved")
     $.ajax({
         type: "GET",
         url: "/get_debate",
