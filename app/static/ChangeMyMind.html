@@ -35,7 +35,7 @@
 			  'Sign out ' + googleUser.getBasicProfile().getEmail();
               
         var id_token = googleUser.getAuthResponse().id_token;
-        console.log("ID Token: " + id_token);
+        //console.log("ID Token: " + id_token);
         send_token(id_token);
 		}
         function send_token(user_token){
