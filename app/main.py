@@ -13,8 +13,8 @@ app = Flask(__name__)
 sockets = Sockets(app)
 
 
-@sockets.route('/chat')
-def chat_socket(ws):
+@sockets.route('/chat/<topic>')
+def chat_socket(ws, topic):
     while not ws.closed:
         message = ws.receive()
         if message is None:  # message is "None" if the client has closed.
@@ -25,7 +25,7 @@ def chat_socket(ws):
         clients = ws.handler.server.clients.values()
         for client in clients:
             client.ws.send(message)
-            
+
 # [END gae_flex_websockets_app]
 
 @app.after_request

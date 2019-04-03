@@ -1,5 +1,5 @@
 window.onload = function() {
-    topic = "/pancakes-waffles"
+    topic = "pancakes-waffles"
     //window.history.pushState("object or string", "Title", topic);
 
     document.getElementById("topic").innerHTML = "Pancakes v.s. Waffles...Go!" //grab from db
@@ -8,19 +8,18 @@ window.onload = function() {
     var webSocketUri =  scheme
                         + window.location.hostname
                         + (location.port ? ':'+location.port: '')
-                        + '/chat';
+                        + '/chat/' + topic;
 
       /* Establish the WebSocket connection and register event handlers. */
       var websocket = new WebSocket(webSocketUri);
-      console.log(websocket.url);
 
       websocket.onopen = function() {
         console.log('Connected');
         setTimeout(function(){
             var signout = document.getElementById("signout").textContent.split(" ");
-            window.user_name = signout[signout.length-1];
+            user_name = signout[signout.length-1];
             websocket.send(JSON.stringify([user_name, "has entered the chat"]))
-        }, 0);
+        }, 300);
       };
       websocket.onclose = function() {
         console.log('Closed');
