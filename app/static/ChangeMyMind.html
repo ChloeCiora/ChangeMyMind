@@ -33,7 +33,24 @@
 		  const signoutElement = document.getElementById('signout');
 		  signoutElement.innerHTML =
 			  'Sign out ' + googleUser.getBasicProfile().getEmail();
+              
+        var id_token = googleUser.getAuthResponse().id_token;
+        console.log("ID Token: " + id_token);
+        send_token(id_token);
 		}
+        function send_token(user_token){
+            console.log("login_info_sent")
+            $.ajax({
+                    type: "GET",
+                    url: "/get_token",
+                    data: {user_token: user_token},
+                    success: function(response) {
+                        console.log(response);
+                    }
+                }).done(function(data){
+                    console.log(data);
+                });
+            }
 	</script>
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
 	<!-- Header -->

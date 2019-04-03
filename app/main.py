@@ -8,6 +8,10 @@ from flask import Flask, redirect, render_template, request, jsonify
 from google.cloud import datastore
 from flask_sockets import Sockets
 
+from google.oauth2 import id_token
+from google.auth.transport import requests
+CLIENT_ID = "739915422482-gmra2df2r5tvlp0aktbt6l8pvb9gndfr.apps.googleusercontent.com"
+
 
 app = Flask(__name__)
 sockets = Sockets(app)
@@ -68,6 +72,21 @@ def get_debates():
 @app.route('/get_client', methods=['GET', 'POST'])
 def get_client():
     return datastore.Client()
+@app.route('/get_token', methods = ['GET', 'POST'])
+def get_login_token():
+    user_token = str(request.form['get_token'])
+    print(user_token)
+    try:
+        idinfo = id_token.verify_oauth2_token(user_token, requests.Request(), CLIENT_ID)
+        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+            raise ValueError('Wrong issuer.')
+        userid = idinfo['sub']
+        print("userid =", userid, flush = True)
+        session["userid"] = userid
+    except ValueError:
+        # Invalid token
+        pass
+    return True
 
 if __name__ == '__main__':
     print("""
