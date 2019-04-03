@@ -4,7 +4,7 @@
 
 # [START gae_flex_websockets_app]
 from __future__ import print_function
-from flask import Flask, redirect, render_template, request, jsonify
+from flask import Flask, redirect, render_template, request, jsonify, sessions
 from google.cloud import datastore
 from flask_sockets import Sockets
 
