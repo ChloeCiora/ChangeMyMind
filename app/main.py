@@ -4,7 +4,7 @@
 
 # [START gae_flex_websockets_app]
 from __future__ import print_function
-from flask import Flask, redirect, render_template, request, jsonify, sessions
+from flask import Flask, redirect, render_template, request, jsonify, session
 from google.cloud import datastore
 from flask_sockets import Sockets
 
@@ -15,7 +15,7 @@ CLIENT_ID = "739915422482-gmra2df2r5tvlp0aktbt6l8pvb9gndfr.apps.googleuserconten
 
 app = Flask(__name__)
 sockets = Sockets(app)
-
+app.secret_key = "super duper secret"
 
 @sockets.route('/chat/<topic>')
 def chat_socket(ws, topic):
@@ -60,6 +60,7 @@ def put_debate(debate_id, user, transcript):
     return task
     '''
 
+    print(debate_id)
     ds = get_client()
     task_key = ds.key("chatroom")
     task = datastore.Entity(key=task_key)
@@ -72,21 +73,18 @@ def get_debates():
 @app.route('/get_client', methods=['GET', 'POST'])
 def get_client():
     return datastore.Client()
+
 @app.route('/get_token', methods = ['GET', 'POST'])
-def get_login_token():
-    user_token = str(request.form['get_token'])
+def get_token():
+    user_token = str(request.form['user_token'])
     print(user_token)
-    try:
-        idinfo = id_token.verify_oauth2_token(user_token, requests.Request(), CLIENT_ID)
-        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-            raise ValueError('Wrong issuer.')
-        userid = idinfo['sub']
-        print("userid =", userid, flush = True)
-        session["userid"] = userid
-    except ValueError:
-        # Invalid token
-        pass
-    return True
+    idinfo = id_token.verify_oauth2_token(user_token, requests.Request(), CLIENT_ID)
+    if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+        return jsonify(success=False)
+    userid = idinfo['sub']
+    print("userid =", userid)
+    session["userid"] = userid
+    return jsonify(success=True)
 
 if __name__ == '__main__':
     print("""
