@@ -1,45 +1,48 @@
-window.onload=function(){
-	window.socket = io.connect('http://localhost:8080');
-    //Temporary unique debate ID
-    window.debate_id = 1
-    socket.on( 'connect', function() {
-		document.getElementById("send-btn").onclick = function fun(e) {
-				e.preventDefault()
-                var signout = document.getElementById("signout").textContent.split(" ");
-                var user_name = signout[signout.length-1]
-		window.socket.emit( 'my event', {
-				user_name : user_name,
-				message : document.getElementById("text-input").value
-			} )
-		}
-	} )
+window.onload = function() {
+    topic = "pancakes-waffles"
+    //window.history.pushState("object or string", "Title", topic);
 
-	// Trigger send click on enter key
-	document.getElementById("text-input")
-		.addEventListener("keyup", function(event) {
-		event.preventDefault();
-		if (event.keyCode === 13) {
-			document.getElementById("send-btn").click();
-		}
-	});
+    document.getElementById("topic").innerHTML = "Pancakes v.s. Waffles...Go!" //grab from db
+    
+    var scheme = window.location.protocol == "https:" ? 'wss://' : 'ws://';
+    var webSocketUri =  scheme
+                        + window.location.hostname
+                        + (location.port ? ':'+location.port: '')
+                        + '/chat/' + topic;
 
+      /* Establish the WebSocket connection and register event handlers. */
+      var websocket = new WebSocket(webSocketUri);
 
+      websocket.onopen = function() {
+        console.log('Connected');
+        setTimeout(function(){
+            var signout = document.getElementById("signout").textContent.split(" ");
+            user_name = signout[signout.length-1];
+            websocket.send(JSON.stringify([user_name, "has entered the chat"]))
+        }, 300);
+      };
+      websocket.onclose = function() {
+        console.log('Closed');
+      };
 
-    window.socket.on( 'my response', function( msg ) {
-        console.log( msg )
-
-        if( typeof msg.user_name !== 'undefined' ) {
+      websocket.onmessage = function(e) {
+        user_name = JSON.parse(e.data)[0];
+        msg = JSON.parse(e.data)[1];
+        console.log("Message received: " + e.data);
+        console.log(window.user_name);
+        
+        if(msg != "has entered the chat") {
             var name = document.createElement("div");
             var bubble = document.createElement("div");
             var conv = document.getElementById("conv");
 
-            name.innerHTML = msg.user_name;
+            name.innerHTML = user_name;
             name.style.textAlign = "left";
             name.style.marginTop = "1px";
             name.style.color = "grey";
             name.style.fontSize = "10";
 
-            bubble.innerHTML = msg.message;
+            bubble.innerHTML = msg;
             bubble.style.width = "auto";
             bubble.style.height = "auto";
             bubble.style.display = "table";
@@ -58,18 +61,55 @@ window.onload=function(){
             conv.append(name);
             conv.appendChild(bubble);
             conv.scrollTop = conv.scrollHeight;
-            document.getElementById("text-input").value = "";
+
+            if(msg == document.getElementById("text-input").value) {
+                document.getElementById("text-input").value = "";
+            }
 
             //Store chat in database
-            dbStore(debate_id, msg.user_name, msg.message)
-            dbRetrieve()
+            //dbStore(window.debate_id, user_name, msg);
+            //dbRetrieve();
+        }
+        else {
+            var conv = document.getElementById("conv");
+            var bubble = document.createElement("div");
+            bubble.style.color = "grey";
+            bubble.style.fontSize = "12";
+            bubble.style.textAlign = "center";
+            bubble.style.fontWeight = "bold";
+            bubble.innerHTML = user_name + " has entered the chat";
+            conv.append(bubble);
+        }
+        
+      };
+
+      websocket.onerror = function(e) {
+        console.log('Error (see console)');
+        console.log(e.data);
+      };
+
+      window.debate_id = 1
+      document.getElementById("send-btn").onclick = function fun(e) {
+          e.preventDefault();
+          msg = document.getElementById("text-input").value;
+          if(msg.trim() != "") {
+            var signout = document.getElementById("signout").textContent.split(" ");
+            var user_name = signout[signout.length-1];
+            websocket.send( JSON.stringify([user_name, msg]));
+          }
 		}
-	})
+        
+        document.getElementById("text-input")
+        .addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                document.getElementById("send-btn").click();
+            }
+        });
 }
 
-
 function dbStore(debate_id, user, transcript){
-    console.log("Stored")
+    //console.log("Stored: " + debate_id + " " + user + " " + transcript)
     $.ajax({
         type: "GET",
         url: "/webservice",
@@ -86,7 +126,7 @@ function dbStore(debate_id, user, transcript){
 
 
 function dbRetrieve(){
-    console.log("Retrieved")
+    //console.log("Retrieved")
     $.ajax({
         type: "GET",
         url: "/get_debate",
@@ -98,4 +138,6 @@ function dbRetrieve(){
         console.log(data);
     });
 }
+
+
 

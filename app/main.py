@@ -1,12 +1,104 @@
+# Command to run locally: gunicorn3 -b 127.0.0.1:8080 -k flask_sockets.worker main:app
+# Run sudo apt-get install gunicorn3 first
+# Deploy using gcloud beta app deploy
+
+# [START gae_flex_websockets_app]
+from __future__ import print_function
 from flask import Flask, redirect, render_template, request, jsonify
-from flask_socketio import SocketIO
 from google.cloud import datastore
+from flask_sockets import Sockets
 
 from google.oauth2 import id_token
 from google.auth.transport import requests
 CLIENT_ID = "739915422482-gmra2df2r5tvlp0aktbt6l8pvb9gndfr.apps.googleusercontent.com"
 
 
+app = Flask(__name__)
+sockets = Sockets(app)
+
+
+@sockets.route('/chat/<topic>')
+def chat_socket(ws, topic):
+    while not ws.closed:
+        message = ws.receive()
+        if message is None:  # message is "None" if the client has closed.
+            continue
+        # Send the message to all clients connected to this webserver
+        # process. (To support multiple processes or instances, an
+        # extra-instance storage or messaging system would be required.)
+        clients = ws.handler.server.clients.values()
+        for client in clients:
+            client.ws.send(message)
+
+# [END gae_flex_websockets_app]
+
+@app.after_request
+def add_header(resp):
+    resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    resp.headers['Pragma'] = 'no-cache'
+    resp.headers['Expires'] = '0'
+    return resp
+    
+@app.route('/')
+def index():
+    return redirect("static/ChangeMyMind.html")
+
+@app.route("/webservice", methods=['GET', 'POST'])    
+def my_webservice():
+    return jsonify(result=put_debate(**request.args)) 
+
+@app.route('/put_debate', methods=['GET', 'POST'])
+def put_debate(debate_id, user, transcript):
+    '''
+    ds = get_client()
+    task_key = ds.key("debate") # unique ID for this entity
+    task = datastore.Entity(key=task_key)
+    task["debate_id"] = debate_id
+    task["user"] = user
+    task["transcript"] = transcript
+    ds.put(task)
+    return task
+    '''
+
+    ds = get_client()
+    task_key = ds.key("chatroom")
+    task = datastore.Entity(key=task_key)
+
+@app.route('/get_debate', methods=['GET', 'POST'])
+def get_debates():
+    ds = get_client()
+    return str(list(ds.query(kind="debate").fetch()))
+
+@app.route('/get_client', methods=['GET', 'POST'])
+def get_client():
+    return datastore.Client()
+@app.route('/get_token', methods = ['GET', 'POST'])
+def get_login_token():
+    user_token = str(request.form['get_token'])
+    print(user_token)
+    try:
+        idinfo = id_token.verify_oauth2_token(user_token, requests.Request(), CLIENT_ID)
+        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+            raise ValueError('Wrong issuer.')
+        userid = idinfo['sub']
+        print("userid =", userid, flush = True)
+        session["userid"] = userid
+    except ValueError:
+        # Invalid token
+        pass
+    return True
+
+if __name__ == '__main__':
+    print("""
+This can not be run directly because the Flask development server does not
+support web sockets. Instead, use gunicorn:
+gunicorn -b 127.0.0.1:8080 -k flask_sockets.worker main:app
+""")
+
+
+
+
+'''
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
@@ -49,28 +141,7 @@ def get_debates():
     ds = get_client()
     return ds.query(kind="debate").fetch()
 
-@app.after_request
-def add_header(resp):
-    resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-    resp.headers['Pragma'] = 'no-cache'
-    resp.headers['Expires'] = '0'
-    return resp
-    
-@app.route('/get_token', methods = ['GET', 'POST'])
-def get_login_token():
-    user_token = str(request.form['get_token'])
-    print(user_token)
-    try:
-        idinfo = id_token.verify_oauth2_token(user_token, requests.Request(), CLIENT_ID)
-        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-            raise ValueError('Wrong issuer.')
-        userid = idinfo['sub']
-        print("userid =", userid, flush = True)
-        session["userid"] = userid
-    except ValueError:
-        # Invalid token
-        pass
-    return True
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True)
+'''
