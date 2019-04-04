@@ -68,11 +68,20 @@ img {
 }
 
 /* Fading animation */
-.fade {
-  -webkit-animation-name: fade;
-  -webkit-animation-duration: 2.5s;
-  animation-name: fade;
-  animation-duration: 2.5s;
+.slideIn {
+  -webkit-animation-name: slideIn;
+  -webkit-animation-duration: 15s;
+  animation-name: slideIn;
+  animation-duration: 15s;
+}
+@-webkit-keyframes slideIn {
+  from {right: 20000px} 
+  to {left: 25%}
+}
+
+@keyframes slideIn {
+  from {right: 2000px} 
+  to {left: 25%}
 }
 
 @-webkit-keyframes fade {
