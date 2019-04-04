@@ -1,5 +1,6 @@
 window.onload = function() {
-    topic = "pancakes-waffles"
+    var topic = window.location.href;
+    topic = topic.substr(-1, 8);
     //window.history.pushState("object or string", "Title", topic);
 
     document.getElementById("topic").innerHTML = "Pancakes v.s. Waffles...Go!" //grab from db
