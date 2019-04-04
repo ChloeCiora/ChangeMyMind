@@ -20,7 +20,7 @@ window.onload = function() {
             user_name = signout[signout.length-1];
             websocket.send(JSON.stringify([user_name, "has entered the chat"]))
         }, 300);
-        setTimeout(function(){modal.style.display = "block";}, 10000);
+        setTimeout(function(){modal.style.display = "block";}, 0);
       };
       
       // Get the modal

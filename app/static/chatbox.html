@@ -50,36 +50,42 @@
     <!-- The Modal -->
     <div id="myModal" class="modal">
     <!-- Modal content -->
-    <div class="modal-content">
+    <div class="modal1-content">
         <div class="modal-header">
-        <h2>What kind of debate are you looking for?</h2>
+        <h2>How did your debate go?</h2>
         </div>
         <div class="modal-body">
-            <form method="get" name="InterestForm" action="chatbox.html">
+            <form method="get" name="FeedbackForm" action="ChangeMyMind.html">
                 <div>
-                    <select required class="form-control" id="interest">
-                    <option selected hidden value="">Interest*</option>
-                    <option value="PvsW">Are pancakes better than waffles?</option>
-                    <option value="cereal">Is Milk Cereal Sauce?</option>
-                    <option value="Eat?">If you were starving, would you eat the characters from Veggie Tales?</option>
-                    <option value="Best Apocalypse">Would a zombie apocalypse actually be kind of a good time?</option>
-                    <option value="tvss">Are tabs better than spaces?</option>
-                    </select>
+                    Did You Change Your Mind?<br>
+                    <input type= "radio" name= "mind" value ="Yes" required>Yes<br>
+                   <input type= "radio" name= "mind" value ="no">No
                 </div>
                 <div>
-                    <select required class="form-control" id="position">
-                    <option selected hidden value="">Position*</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                    </select>
+                     Was this an entertaining or educational debate?<br>
+                    <input type= "radio" name= "good" value ="Yes" required>Yes<br>
+                   <input type= "radio" name= "good" value ="no">No
+                </div>
+                <div>
+                     Did the other debator stay civil?<br>
+                    <input type= "radio" name= "civil" value ="Yes" required>Yes<br>
+                   <input type= "radio" name= "civil" value ="no">No
+                </div>
+                <div>
+                    If not what was your complaint?<br>
+                    <textarea id= "complaints" rows="4" cols= "50"></textarea>
+                </div>
+                <div>
+                    Additional comments or concerns?<br>
+                    <textarea id= "comments" rows="4" cols= "50"></textarea>
                 </div>
                 <div id = frontbutton>
-                <input id= frontbutton type="submit" value="Battle to the Death!">
+                <input id= frontbutton1 type="submit" value="Submit">
                 </div>
             </form>
         </div>
         <div class="modal-footer">
-        <h3>Get ready for a debate!</h3>
+        <h3>Thank You for Participating!</h3>
         </div>
     </div>
     </div>

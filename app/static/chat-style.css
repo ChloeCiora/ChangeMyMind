@@ -208,7 +208,14 @@ body {
 /* Modal Content */
 .modal-content {
   position: fixed;
-  top: 37%;
+  top: 30%;
+  left: 25%;
+  background-color: #b3d9ff;
+  width: 50%;
+}
+.modal1-content {
+  position: fixed;
+  top: 8%;
   left: 25%;
   background-color: #b3d9ff;
   width: 50%;
