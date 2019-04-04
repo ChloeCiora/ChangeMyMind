@@ -1,21 +1,24 @@
-# Command to run locally: gunicorn3 -b 127.0.0.1:8080 -k flask_sockets.worker main:app
+# Command to run locally:
+# gunicorn3 -b 127.0.0.1:8080 -k flask_sockets.worker main:app
 # Run sudo apt-get install gunicorn3 first
 # Deploy using gcloud beta app deploy
 
 # [START gae_flex_websockets_app]
 from __future__ import print_function
-from flask import Flask, redirect, render_template, request, jsonify, session
+from flask import Flask, redirect, request, jsonify, session
 from google.cloud import datastore
 from flask_sockets import Sockets
 
 from google.oauth2 import id_token
 from google.auth.transport import requests
-CLIENT_ID = "739915422482-gmra2df2r5tvlp0aktbt6l8pvb9gndfr.apps.googleusercontent.com"
+a = "739915422482-gmra2df2r5tvlp0aktbt6l8pvb9gndfr.apps.googleusercontent.com"
+CLIENT_ID = a
 
 
 app = Flask(__name__)
 sockets = Sockets(app)
 app.secret_key = "super duper secret"
+
 
 @sockets.route('/chat/<topic>')
 def chat_socket(ws, topic):
@@ -32,20 +35,24 @@ def chat_socket(ws, topic):
 
 # [END gae_flex_websockets_app]
 
+
 @app.after_request
 def add_header(resp):
     resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     resp.headers['Pragma'] = 'no-cache'
     resp.headers['Expires'] = '0'
     return resp
-    
+
+
 @app.route('/')
 def index():
     return redirect("static/ChangeMyMind.html")
 
-@app.route("/webservice", methods=['GET', 'POST'])    
+
+@app.route("/webservice", methods=['GET', 'POST'])
 def my_webservice():
-    return jsonify(result=put_debate(**request.args)) 
+    return jsonify(result=put_debate(**request.args))
+
 
 @app.route('/put_debate', methods=['GET', 'POST'])
 def put_debate(debate_id, user, transcript):
@@ -64,27 +71,34 @@ def put_debate(debate_id, user, transcript):
     ds = get_client()
     task_key = ds.key("chatroom")
     task = datastore.Entity(key=task_key)
+    task
+
 
 @app.route('/get_debate', methods=['GET', 'POST'])
 def get_debates():
     ds = get_client()
     return str(list(ds.query(kind="debate").fetch()))
 
+
 @app.route('/get_client', methods=['GET', 'POST'])
 def get_client():
     return datastore.Client()
 
-@app.route('/get_token', methods = ['GET', 'POST'])
+
+@app.route('/get_token', methods=['GET', 'POST'])
 def get_token():
-    user_token = str(request.form['user_token'])
-    print(user_token)
-    idinfo = id_token.verify_oauth2_token(user_token, requests.Request(), CLIENT_ID)
-    if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+    token = str(request.form['token'])
+    print(token)
+    idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+    site = 'accounts.google.com'
+    site1 = 'https://accounts.google.com'
+    if idinfo['iss'] not in [site, site1]:
         return jsonify(success=False)
     userid = idinfo['sub']
     print("userid =", userid)
     session["userid"] = userid
     return jsonify(success=True)
+
 
 if __name__ == '__main__':
     print("""
@@ -92,8 +106,6 @@ This can not be run directly because the Flask development server does not
 support web sockets. Instead, use gunicorn:
 gunicorn -b 127.0.0.1:8080 -k flask_sockets.worker main:app
 """)
-
-
 
 
 '''
@@ -130,9 +142,9 @@ def put_debate(debate_id, user, transcript):
     ds.put(task)
     return task
 
-@app.route("/webservice", methods=['GET', 'POST'])    
+@app.route("/webservice", methods=['GET', 'POST'])
 def my_webservice():
-    return jsonify(result=put_debate(**request.args)) 
+    return jsonify(result=put_debate(**request.args))
 
 @app.route('/get_debate', methods=['GET', 'POST'])
 def get_debates():
