@@ -20,6 +20,7 @@ window.onload = function() {
             user_name = signout[signout.length-1];
             websocket.send(JSON.stringify([user_name, "has entered the chat"]))
         }, 300);
+        //setTimeout(/*myFunction*/, 60000);
       };
       websocket.onclose = function() {
         console.log('Closed');

@@ -98,8 +98,74 @@ function showSlides() {
 }
 </script>
 <div id= send>
-<a id= send href="form.html">
-  <button id= frontbutton>Let's Debate!!</button>
-</a>
-  </body>
+  <button id="frontbutton">Let's Debate!!</button>
+</div>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close">&times;</span>
+      <h2>What kind of debate are you looking for?</h2>
+    </div>
+    <div class="modal-body">
+		<form method="get" name="InterestForm" action="chatbox.html">
+			<div>
+				<select required class="form-control" id="interest">
+				  <option selected hidden value="">Interest*</option>
+				  <option value="PvsW">Are pancakes better than waffles?</option>
+				  <option value="cereal">Is Milk Cereal Sauce?</option>
+				  <option value="Eat?">If you were starving, would you eat the characters from Veggie Tales?</option>
+				  <option value="Best Apocalypse">Would a zombie apocalypse actually be kind of a good time?</option>
+				  <option value="tvss">Are tabs better than spaces?</option>
+				</select>
+			</div>
+			<div>
+				<select required class="form-control" id="position">
+				  <option selected hidden value="">Position*</option>
+				  <option value="yes">Yes</option>
+				  <option value="no">No</option>
+				</select>
+			</div>
+			<div id = frontbutton>
+			  <input id= frontbutton type="submit" value="Battle to the Death!">
+			</div>
+		</form>
+    </div>
+    <div class="modal-footer">
+      <h3>Get ready for a debate!</h3>
+    </div>
+  </div>
+</div>
+
+<script>
+// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+var btn = document.getElementById("frontbutton");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
+
+</body>
 </html>
