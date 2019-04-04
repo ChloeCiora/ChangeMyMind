@@ -20,7 +20,13 @@ window.onload = function() {
             user_name = signout[signout.length-1];
             websocket.send(JSON.stringify([user_name, "has entered the chat"]))
         }, 300);
+        setTimeout(function(){modal.style.display = "block";}, 10000);
       };
+      
+      // Get the modal
+var modal = document.getElementById('myModal');
+      
+      
       websocket.onclose = function() {
         console.log('Closed');
       };
@@ -138,6 +144,3 @@ function dbRetrieve(){
         console.log(data);
     });
 }
-
-
-
