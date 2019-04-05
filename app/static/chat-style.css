@@ -68,11 +68,20 @@ img {
 }
 
 /* Fading animation */
-.fade {
-  -webkit-animation-name: fade;
-  -webkit-animation-duration: 2.5s;
-  animation-name: fade;
-  animation-duration: 2.5s;
+.slideIn {
+  -webkit-animation-name: slideIn;
+  -webkit-animation-duration: 15s;
+  animation-name: slideIn;
+  animation-duration: 15s;
+}
+@-webkit-keyframes slideIn {
+  from {right: 20000px} 
+  to {left: 25%}
+}
+
+@keyframes slideIn {
+  from {right: 2000px} 
+  to {left: 25%}
 }
 
 @-webkit-keyframes fade {
@@ -150,14 +159,14 @@ li a:hover {
 }
 
 #frontbutton {
-  background-color: #B1A296; /* Green */
+  background-color: #77767a; /* Green */
   border-radius: 8px;
   color: white;
   text-align: center;
   display: inline-block;
   font-size: 24px;
   align-items: center;
-	justify-content: center;
+  justify-content: center;
 }
 #frontbutton1 {
   background-color: #557A95; /* Green */
@@ -208,7 +217,14 @@ body {
 /* Modal Content */
 .modal-content {
   position: fixed;
-  top: 37%;
+  top: 30%;
+  left: 25%;
+  background-color: #b3d9ff;
+  width: 50%;
+}
+.modal1-content {
+  position: fixed;
+  top: 8%;
   left: 25%;
   background-color: #b3d9ff;
   width: 50%;
@@ -251,4 +267,56 @@ body {
 @keyframes fadeIn {
   from {opacity: 0} 
   to {opacity: 1}
+}
+
+/* Modal Content */
+.modal2-content {
+  position: fixed;
+  top: 30%;
+  left: 25%;
+  background-color: #b3d9ff;
+  width: 50%;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal2-header {
+  padding: 2px 16px;
+  background-color: #557A95;
+  color: #404040;
+}
+
+.modal2-body {
+    padding: 2px 16px;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal2-footer {
+  padding: 2px 16px;
+  background-color: #557A95;
+  color: #404040;
+}
+.close1 {
+  color: #404040;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close1:hover,
+.close1:focus {
+  color: rgb(255, 0, 0);
+  text-decoration: none;
+  cursor: pointer;
+}
+#frontbutton2 {
+  background-color: #b3d9ff; /* Green */
+  border-radius: 8px;
+  color: white;
+  text-align: center;
+  display: inline-block;
+  font-size: 24px;
+  align-items: center;
+  justify-content: center;
 }
