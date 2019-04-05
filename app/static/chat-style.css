@@ -268,3 +268,55 @@ body {
   from {opacity: 0} 
   to {opacity: 1}
 }
+
+/* Modal Content */
+.modal2-content {
+  position: fixed;
+  top: 30%;
+  left: 25%;
+  background-color: #b3d9ff;
+  width: 50%;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal2-header {
+  padding: 2px 16px;
+  background-color: #557A95;
+  color: #404040;
+}
+
+.modal2-body {
+    padding: 2px 16px;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal2-footer {
+  padding: 2px 16px;
+  background-color: #557A95;
+  color: #404040;
+}
+.close1 {
+  color: #404040;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close1:hover,
+.close1:focus {
+  color: rgb(255, 0, 0);
+  text-decoration: none;
+  cursor: pointer;
+}
+#frontbutton2 {
+  background-color: #b3d9ff; /* Green */
+  border-radius: 8px;
+  color: white;
+  text-align: center;
+  display: inline-block;
+  font-size: 24px;
+  align-items: center;
+  justify-content: center;
+}

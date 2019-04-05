@@ -40,20 +40,55 @@ window.onload = function() {
     showSlides();
     // Get the modal
     var modal = document.getElementById('myModal');
-
+    var modal2 = document.getElementById('myModal2');
     // Get the button that opens the modal
     var btn = document.getElementById("frontbutton");
-    var btn1 = document.getElementById("frontbutton1");
+    var btn1 = document.getElementById("frontbutton2");
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
+    var span1 = document.getElementsByClassName("close1")[0];
+
     btn.onclick = function() {
-        modal.style.display = "block";
+        var signedIn = document.getElementById("signout").textContent;
+        if (signedIn.length > 8){
+            modal.style.display = "block";
+        }
+        else {
+            modal2.style.display = "block";
+        }  
     }
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
         modal.style.display = "none";
     }
-
+    span1.onclick = function() {
+        var signedIn = document.getElementById("signout").textContent;
+        if (signedIn.length > 8){
+            modal2.style.display = "none";
+            const mess = document.getElementById("message")
+            mess.innerHTML = 'Please sign in in order to debate!';
+            mess.style.color = "#000000"
+        }
+        else {
+            const mess = document.getElementById("message")
+            mess.innerHTML = 'Please sign in in order to debate!<br>' + "You must sign in to continue!";
+            mess.style.color = "#FF0000"
+        }
+    }
+    btn1.onclick = function() {
+        var signedIn = document.getElementById("signout").textContent;
+        if (signedIn.length > 8){
+            modal2.style.display = "none";
+            const mess = document.getElementById("message")
+            mess.innerHTML = 'Please sign in in order to debate!';
+            mess.style.color = "#404040"
+        }
+        else {
+            const mess = document.getElementById("message")
+            mess.innerHTML = 'Please sign in in order to debate!<br>' + "You must sign in to continue!";
+            mess.style.color = "#404040"
+        }
+    }
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         if (event.target == modal) {
