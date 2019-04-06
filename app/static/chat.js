@@ -125,8 +125,6 @@ window.onload = function() {
           e.preventDefault();
           msg = document.getElementById("text-input").value;
           if(msg.trim() != "") {
-            var signout = document.getElementById("signout").textContent.split(" ");
-            var user_name = signout[signout.length-1];
             websocket.send(JSON.stringify({"type": "message", "msg": msg}));
           }
 		}

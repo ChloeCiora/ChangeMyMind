@@ -75,13 +75,6 @@ def decide_request(req, uname, clients, room, ip, port):
 
     return dumps(resp)
 
-# post to join room, store session data for user
-@app.route('/joinRoom', methods=['POST'])
-def join_post():
-    # store session info for use
-    session['name'] = "tma8520"
-    session['room'] = request.form['InterestForm']
-
 
 @sockets.route('/chat')
 def chat_socket(ws):
@@ -92,9 +85,7 @@ def chat_socket(ws):
         if message is None:  # message is "None" if the client has closed.
             continue
         # store name of sender
-        session['name'] = "tma8520"
-        session['room'] = "pancakesvwaffles"
-        uname = session.get('name')
+        uname = session.get('email')
         
         client_ip = request.environ['REMOTE_ADDR'] # store IP of client
         client_port = request.environ['REMOTE_PORT'] # store port of client
@@ -102,7 +93,7 @@ def chat_socket(ws):
         # now process message dependent on type + room, clients
         if ws.handler.server.clients:
             clients = ws.handler.server.clients
-        room = session.get('room')
+        room = session.get('topic')
         resp = decide_request(msg, uname, clients, room, client_ip, client_port)
 
         for client in r_to_client[room]:
