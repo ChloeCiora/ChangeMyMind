@@ -49,6 +49,32 @@
 </div>
 <br>
 
+<script>
+var slideIndex = 0;
+showSlides();
+
+function showSlides() {
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";  
+  }
+  slideIndex++;
+  if (slideIndex > slides.length) {slideIndex = 1}    
+  slides[slideIndex-1].style.display = "block";  
+  slides[slideIndex-1].style.marginLeft = "auto";
+  slides[slideIndex-1].style.marginRight = "auto";
+  setTimeout(showSlides, 5000); // Change image every 2 seconds
+}
+
+function mysubmit(){
+    var select = document.getElementById('interest');
+    var topic = select.options[select.selectedIndex].value;
+    document.InterestForm.action = "https://8080-dot-6235105-dot-devshell.appspot.com/static/"+topic;
+    InterestForm.submit();
+}
+</script>
+
 <div id= send>
   <button id="frontbutton">Let's Debate!!</button>
 </div>
@@ -80,8 +106,8 @@
 			<div>
 				<select required class="form-control" id="interest", name = "topic">
 				  <option selected hidden value="">Interest*</option>
-				  <option value="PvsW">Are pancakes better than waffles?</option>
-				  <option value="cereal">Is Milk Cereal Sauce?</option>
+				  <option value="pancakes-waffles.html">Are pancakes better than waffles?</option>
+				  <option value="milk-cereal-sauce.html">Is Milk Cereal Sauce?</option>
 				  <option value="Eat?">If you were starving, would you eat the characters from Veggie Tales?</option>
 				  <option value="Best Apocalypse">Would a zombie apocalypse actually be kind of a good time?</option>
 				  <option value="tvss">Are tabs better than spaces?</option>

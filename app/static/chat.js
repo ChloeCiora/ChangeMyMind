@@ -1,5 +1,6 @@
 window.onload = function() {
-    topic = "pancakes-waffles"
+    var topic = window.location.href;
+    topic = topic.substr(-1, 8);
     //window.history.pushState("object or string", "Title", topic);
 
     document.getElementById("topic").innerHTML = "Pancakes v.s. Waffles...Go!" //grab from db
@@ -8,7 +9,7 @@ window.onload = function() {
     var webSocketUri =  scheme
                         + window.location.hostname
                         + (location.port ? ':'+location.port: '')
-                        + '/chat/' + topic;
+                        + '/chat';
 
       /* Establish the WebSocket connection and register event handlers. */
       var websocket = new WebSocket(webSocketUri);
@@ -18,9 +19,10 @@ window.onload = function() {
         setTimeout(function(){
             var signout = document.getElementById("signout").textContent.split(" ");
             user_name = signout[signout.length-1];
-            websocket.send(JSON.stringify([user_name, "has entered the chat"]))
+            //websocket.send(JSON.stringify([user_name, "has entered the chat"]))
+            websocket.send(JSON.stringify({type: "enter"})) 
         }, 300);
-        setTimeout(function(){modal.style.display = "block";}, 60000);
+        //setTimeout(function(){modal.style.display = "block";}, 60000);
       };
       
       // Get the modal
@@ -32,6 +34,8 @@ var modal = document.getElementById('myModal');
       };
 
       websocket.onmessage = function(e) {
+          console.log("message sent");
+          /*
         user_name = JSON.parse(e.data)[0];
         msg = JSON.parse(e.data)[1];
         console.log("Message received: " + e.data);
@@ -104,7 +108,7 @@ var modal = document.getElementById('myModal');
             websocket.send( JSON.stringify([user_name, msg]));
           }
 		}
-        
+        */
         document.getElementById("text-input")
         .addEventListener("keyup", function(event) {
             event.preventDefault();
@@ -143,4 +147,5 @@ function dbRetrieve(){
     }).done(function(data){
         console.log(data);
     });
+}
 }
