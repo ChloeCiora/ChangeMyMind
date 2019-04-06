@@ -22,13 +22,16 @@ window.onload = function() {
             //websocket.send(JSON.stringify([user_name, "has entered the chat"]))
             websocket.send(JSON.stringify({type: "enter"})) 
         }, 300);
-        //setTimeout(function(){modal.style.display = "block";}, 60000);
+        setTimeout(function(){modal.style.display = "block";}, 60000);
       };
       
       // Get the modal
-var modal = document.getElementById('myModal');
+    var modal = document.getElementById('myModal');
+    var button = document.getElementById("frontbutton")
       
-      
+      button.onclick = function (){
+          modal.style.display = "block";
+      }
       websocket.onclose = function() {
         console.log('Closed');
       };
