@@ -76,9 +76,9 @@
       <h2>What kind of debate are you looking for?</h2>
     </div>
     <div class="modal-body">
-		<form method="get" name="InterestForm" action="chatbox.html">
+		<form method="post" name="InterestForm" action="/get_topic">
 			<div>
-				<select required class="form-control" id="interest">
+				<select required class="form-control" id="interest", name = "topic">
 				  <option selected hidden value="">Interest*</option>
 				  <option value="PvsW">Are pancakes better than waffles?</option>
 				  <option value="cereal">Is Milk Cereal Sauce?</option>
@@ -93,7 +93,7 @@
                    <input type= "radio" name= "position" value ="no">No
 			</div>
 			<div id = frontbutton>
-			  <input id= frontbutton1 type="submit" value="Battle to the Death!">
+			  <input id="frontbutton1" type="submit" value="Battle to the Death!">
 			</div>
 		</form>
     </div>
