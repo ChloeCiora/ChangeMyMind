@@ -19,14 +19,15 @@ function onSignedIn(googleUser) {
         
     var id_token = googleUser.getAuthResponse().id_token;
     //console.log("ID Token: " + id_token);
-    send_token(id_token);
+    send_token(id_token, googleUser.getBasicProfile().getEmail());
 }
-function send_token(user_token){
+function send_token(user_token, user_email){
     console.log("login_info_sent")
     $.ajax({
-            type: "GET",
+            type: "POST",
             url: "/get_token",
-            data: {user_token: user_token},
+            data: {user_token: user_token,
+            user_email: user_email},
             success: function(response) {
                 console.log(response);
             }
