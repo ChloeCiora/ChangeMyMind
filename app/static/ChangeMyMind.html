@@ -15,6 +15,7 @@
 	<ul>
 		<li><a href="ChangeMyMind.html">Home</a></li>
 		<li><a href="#" onclick="signOut();" id="signout">Sign Out</a></li>
+        <li><a href="profile.html" id = profile>Profile</a></li>
 		<li><div class="g-signin2" data-onsuccess="onSignedIn"></div></li>
 	</ul>
 	<!-- Header -->
@@ -48,33 +49,6 @@
   <img id= row src="th.jpg" height="300">
 </div>
 <br>
-
-<script>
-var slideIndex = 0;
-showSlides();
-
-function showSlides() {
-  var i;
-  var slides = document.getElementsByClassName("mySlides");
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";  
-  }
-  slideIndex++;
-  if (slideIndex > slides.length) {slideIndex = 1}    
-  slides[slideIndex-1].style.display = "block";  
-  slides[slideIndex-1].style.marginLeft = "auto";
-  slides[slideIndex-1].style.marginRight = "auto";
-  setTimeout(showSlides, 5000); // Change image every 2 seconds
-}
-
-function mysubmit(){
-    var select = document.getElementById('interest');
-    var topic = select.options[select.selectedIndex].value;
-    document.InterestForm.action = "https://8080-dot-6235105-dot-devshell.appspot.com/static/"+topic;
-    InterestForm.submit();
-}
-</script>
-
 <div id= send>
   <button id="frontbutton">Let's Debate!!</button>
 </div>

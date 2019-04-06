@@ -1,3 +1,22 @@
+
+		function onSignIn(){
+		  var profile = googleUser.getBasicProfile();
+		  document.getElementById('profileinfo').innerHTML = profile.getName() + "<br>"
+          document.getElementById("username").innerHTML = profile.getName() 
+          
+		}
+		function signOut() {
+		  var auth2 = gapi.auth2.getAuthInstance();
+          const signoutElement = document.getElementById('signout');
+		  signoutElement.innerHTML =
+			  'Sign out'
+		  auth2.signOut();
+		}
+		function onSignedIn(googleUser) {
+		  const signoutElement = document.getElementById('signout');
+		  signoutElement.innerHTML =
+			  'Sign out ' + googleUser.getBasicProfile().getEmail();
+		}
 window.onload = function() {
     var topic = window.location.href;
     topic = topic.substr(-1, 8);
