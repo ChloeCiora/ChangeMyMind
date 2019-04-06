@@ -5,6 +5,7 @@
 
 # [START gae_flex_websockets_app]
 from __future__ import print_function
+
 from flask import Flask, redirect, request, jsonify, session, url_for, logging
 from google.cloud import datastore
 from flask_sockets import Sockets
@@ -195,6 +196,12 @@ def get_token():
     session["email"] = email
     return jsonify(success=True)
 
+@app.route('/get_topic', methods=['GET', 'POST'])
+def get_topic():
+    topic = str(request.form['topic'])
+    print(topic)
+    session["topic"] = topic
+    return redirect('/static/chatbox.html', code=302)
 
 if __name__ == '__main__':
     print("""
