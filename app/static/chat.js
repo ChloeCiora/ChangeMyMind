@@ -17,10 +17,15 @@
 		  signoutElement.innerHTML =
 			  'Sign out ' + googleUser.getBasicProfile().getEmail();
 		}
-window.onload = function() {
-    var topic = window.location.href;
-    topic = topic.substr(-1, 8);
-    //window.history.pushState("object or string", "Title", topic);
+window.onload = function() {     
+    // Get the modal
+    var modal = document.getElementById('myModal');
+    var button = document.getElementById("frontbutton")
+      
+    button.onclick = function (){
+        modal.style.display = "block";
+        websocket.send(JSON.stringify({type: "exit", msg: ""}))
+    }
     
     var scheme = window.location.protocol == "https:" ? 'wss://' : 'ws://';
     var webSocketUri =  scheme
@@ -38,16 +43,10 @@ window.onload = function() {
         }, 300);
         setTimeout(function(){modal.style.display = "block";}, 60000);
       };
-      
-      // Get the modal
-    var modal = document.getElementById('myModal');
-    var button = document.getElementById("frontbutton")
-      
-      button.onclick = function (){
-          modal.style.display = "block";
-      }
+
       websocket.onclose = function() {
         console.log('Closed');
+        websocket.send(JSON.stringify({type: "exit", msg: ""}))
       };
 
       websocket.onmessage = function(e) {
@@ -71,7 +70,7 @@ window.onload = function() {
         console.log("Name: " + user_name);
         console.log("Msg: " + msg);
         
-        if(msg != "has entered the chat") {
+        if(msg != "has entered the chat" && msg != "has left the chat") {
             var name = document.createElement("div");
             var bubble = document.createElement("div");
             var conv = document.getElementById("conv");
@@ -91,12 +90,10 @@ window.onload = function() {
             bubble.style.borderRadius = "10px";
             bubble.style.padding = "7px";
             bubble.style.marginLeft = "5px";
-            //bubble.style.marginRight = "0px";
             bubble.style.marginTop = "1px";
             bubble.style.maxWidth = "90%";
             bubble.style.background = "#6666ff";
             bubble.style.color = "white";
-
 
             conv.append(name);
             conv.appendChild(bubble);
@@ -117,7 +114,7 @@ window.onload = function() {
             bubble.style.fontSize = "12";
             bubble.style.textAlign = "center";
             bubble.style.fontWeight = "bold";
-            bubble.innerHTML = user_name + " has entered the chat";
+            bubble.innerHTML = user_name + " " + msg;
             conv.append(bubble);
         }
         
