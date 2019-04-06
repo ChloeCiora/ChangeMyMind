@@ -65,9 +65,10 @@ window.onload = function() {
         var signedIn = document.getElementById("signout").textContent;
         if (signedIn.length > 8){
             modal2.style.display = "none";
+            modal.style.display = "block";
             const mess = document.getElementById("message")
             mess.innerHTML = 'Please sign in in order to debate!';
-            mess.style.color = "#000000"
+            mess.style.color = "#404040"
         }
         else {
             const mess = document.getElementById("message")
@@ -79,14 +80,15 @@ window.onload = function() {
         var signedIn = document.getElementById("signout").textContent;
         if (signedIn.length > 8){
             modal2.style.display = "none";
+            modal.style.display = "block";
             const mess = document.getElementById("message")
             mess.innerHTML = 'Please sign in in order to debate!';
-            mess.style.color = "#404040"
+            mess.style.color = "#404040";
         }
         else {
             const mess = document.getElementById("message")
             mess.innerHTML = 'Please sign in in order to debate!<br>' + "You must sign in to continue!";
-            mess.style.color = "#404040"
+            mess.style.color = "#FF0000";
         }
     }
     // When the user clicks anywhere outside of the modal, close it
