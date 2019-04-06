@@ -94,10 +94,9 @@ def chat_socket(ws):
             continue
         # store name of sender
         uname = session.get('email')
-        
-        client_ip = request.environ['REMOTE_ADDR'] # store IP of client
-        client_port = request.environ['REMOTE_PORT'] # store port of client
-        msg = loads(message) # convert to dict
+        client_ip = request.environ['REMOTE_ADDR']  # store IP of client
+        client_port = request.environ['REMOTE_PORT']  # store port of client
+        msg = loads(message)  # convert to dict
         # now process message dependent on type + room, clients
         if ws.handler.server.clients:
             clients = ws.handler.server.clients
