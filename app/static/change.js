@@ -19,14 +19,15 @@ function onSignedIn(googleUser) {
         
     var id_token = googleUser.getAuthResponse().id_token;
     //console.log("ID Token: " + id_token);
-    send_token(id_token);
+    send_token(id_token, googleUser.getBasicProfile().getEmail());
 }
-function send_token(user_token){
+function send_token(user_token, user_email){
     console.log("login_info_sent")
     $.ajax({
-            type: "GET",
+            type: "POST",
             url: "/get_token",
-            data: {user_token: user_token},
+            data: {user_token: user_token,
+            user_email: user_email},
             success: function(response) {
                 console.log(response);
             }
@@ -65,9 +66,10 @@ window.onload = function() {
         var signedIn = document.getElementById("signout").textContent;
         if (signedIn.length > 8){
             modal2.style.display = "none";
+            modal.style.display = "block";
             const mess = document.getElementById("message")
             mess.innerHTML = 'Please sign in in order to debate!';
-            mess.style.color = "#000000"
+            mess.style.color = "#404040"
         }
         else {
             const mess = document.getElementById("message")
@@ -79,14 +81,15 @@ window.onload = function() {
         var signedIn = document.getElementById("signout").textContent;
         if (signedIn.length > 8){
             modal2.style.display = "none";
+            modal.style.display = "block";
             const mess = document.getElementById("message")
             mess.innerHTML = 'Please sign in in order to debate!';
-            mess.style.color = "#404040"
+            mess.style.color = "#404040";
         }
         else {
             const mess = document.getElementById("message")
             mess.innerHTML = 'Please sign in in order to debate!<br>' + "You must sign in to continue!";
-            mess.style.color = "#404040"
+            mess.style.color = "#FF0000";
         }
     }
     // When the user clicks anywhere outside of the modal, close it

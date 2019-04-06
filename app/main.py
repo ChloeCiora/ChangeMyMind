@@ -183,8 +183,10 @@ def get_client():
 
 @app.route('/get_token', methods=['GET', 'POST'])
 def get_token():
-    token = str(request.form['token'])
-    print(token)
+    token = str(request.form['user_token'])
+    email = str(request.form['user_email'])
+    print(email)
+    #print(token)
     idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
     site = 'accounts.google.com'
     site1 = 'https://accounts.google.com'
@@ -193,6 +195,7 @@ def get_token():
     userid = idinfo['sub']
     print("userid =", userid)
     session["userid"] = userid
+    session["email"] = email
     return jsonify(success=True)
 
 
