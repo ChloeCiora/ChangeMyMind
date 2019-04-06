@@ -6,31 +6,35 @@
 # [START gae_flex_websockets_app]
 from __future__ import print_function
 
-from flask import Flask, redirect, request, jsonify, session, url_for, logging
+from flask import Flask, redirect, request, jsonify, session
 from google.cloud import datastore
 from flask_sockets import Sockets
-import threading, sys
+import sys
 from bson.json_util import loads, dumps
-import json
 
 from google.oauth2 import id_token
 from google.auth.transport import requests
 a = "739915422482-gmra2df2r5tvlp0aktbt6l8pvb9gndfr.apps.googleusercontent.com"
 CLIENT_ID = a
 u_to_client = {}                  # map users to Client object
-r_to_client = {}                # map room to list of Clients connected`(uses Object from gevent API)
+r_to_client = {}
+# map room to list of Clients connected`(uses Object from gevent API)
 
 app = Flask(__name__)
 sockets = Sockets(app)
 app.secret_key = "super duper secret"
 
-# helper for when new client enters room, store new Client object, map uname to Client object for removal
+# helper for when new client enters room
+# store new Client object, map uname to Client object for removal
+
+
 def add_client(clients, room, uname, ip, port):
-    # use IP port tuple to identify client, find client with matching info, map for later messages
+    # use IP port tuple to identify client
+    # find client with matching info, map for later messages
     if room not in r_to_client.keys():
         r_to_client[room] = []  # if empty, create new list
     client_tuple = (str(ip), int(port))
-    print(list(clients.keys()), file=sys.stderr, flush=True) # DEBUG
+    print(list(clients.keys()), file=sys.stderr, flush=True)
     print(client_tuple, file=sys.stderr, flush=True)   # DEBUG
     for ip_tuple in list(clients.keys()):
         if ip_tuple == client_tuple:
@@ -40,26 +44,29 @@ def add_client(clients, room, uname, ip, port):
             r_to_client[room].append(found_client)
             break
 
-# helper from when client leaves room, remove Client entry for uname and from room list
+# helper from when client leaves room
+# remove Client entry for uname and from room list
 # update client list
+
+
 def remove_client(uname, room):
     global r_to_client
     global u_to_client
-    to_rem = u_to_client.pop(uname) # remove leaving client's entry and get val
-    print(to_rem, file=sys.stderr, flush=True) # DEBUG
+    to_rem = u_to_client.pop(uname)  # remove leaving client entry and get val
+    print(to_rem, file=sys.stderr, flush=True)  # DEBUG
     if to_rem in r_to_client[room]:
-        print('removing client', file=sys.stderr, flush=True) # DEBUG
+        print('removing client', file=sys.stderr, flush=True)  # DEBUG
         r_to_client[room].remove(to_rem)
     if not r_to_client[room]:
-        print('room ' + room + ' is empty!', file=sys.stderr, flush=True) # DEBUG
-        r_to_client.pop(room) # remove room
+        print('room ' + room + ' is empty!', file=sys.stderr, flush=True)
+        r_to_client.pop(room)  # remove room
 
 
 def decide_request(req, uname, clients, room, ip, port):
     resp = ""
     req_type = req['type']
     if req_type == 'enter':
-        # person has joined room, must take difference of new clients list and old
+        # person joined room, must take difference of new clients list and old
         # use to track person in room
         add_client(clients, room, uname, ip, port)
         resp = {"name": uname, "msg": "has entered the chat"}
@@ -67,10 +74,11 @@ def decide_request(req, uname, clients, room, ip, port):
         # someone is sending a message
         resp = {"name": uname, "msg": req['msg']}
     elif req_type == 'leave':
-        # someone leaving the room, remove from room client list to avoid issues, print status
-        # also need to update sheet for leaving user, key = UID + title, IF NOT EMPTY
+        # someone leaving the room remove from room client list to avoid issues
+        # print status
+        # need to update sheet for leaving user key = UID + title, IF NOT EMPTY
         if req['msg']:
-            uid = session['u_token']
+            session['u_token']
         remove_client(uname, room)
 
     return dumps(resp)
@@ -88,51 +96,28 @@ def chat_socket(ws):
     # while socket is open, process messages
     while not ws.closed:
         message = ws.receive()
-        #print(message, file=sys.stderr, flush=True)
+        # print(message, file=sys.stderr, flush=True)
         if message is None:  # message is "None" if the client has closed.
             continue
         # store name of sender
         session['name'] = "tma8520"
         session['room'] = "pancakesvwaffles"
         uname = session.get('name')
-        
-        client_ip = request.environ['REMOTE_ADDR'] # store IP of client
-        client_port = request.environ['REMOTE_PORT'] # store port of client
-        msg = loads(message) # convert to dict
+        client_ip = request.environ['REMOTE_ADDR']  # store IP of client
+        client_port = request.environ['REMOTE_PORT']  # store port of client
+        msg = loads(message)  # convert to dict
         # now process message dependent on type + room, clients
         if ws.handler.server.clients:
             clients = ws.handler.server.clients
         room = session.get('room')
-        resp = decide_request(msg, uname, clients, room, client_ip, client_port)
+        res = decide_request(msg, uname, clients, room, client_ip, client_port)
 
         for client in r_to_client[room]:
             print("sending", file=sys.stderr, flush=True)
-            #print(resp, file=sys.stderr, flush=True)
-            print(resp, file=sys.stderr, flush=True)
-            client.ws.send(resp)
-    
-'''
-@app.route('/chat')
-def chat():
-    print("chat", file=sys.stderr)
-    room = session.get('room')
-    name = session.get('name')
-    return redirect(url_for('chat', room=room, name=name))
-'''
-'''
-@sockets.route('/chat/<topic>')
-def chat_socket(ws, topic):
-    while not ws.closed:
-        message = ws.receive()
-        if message is None:  # message is "None" if the client has closed.
-            continue
-        # Send the message to all clients connected to this webserver
-        # process. (To support multiple processes or instances, an
-        # extra-instance storage or messaging system would be required.)
-        clients = ws.handler.server.clients.values()
-        for client in clients:
-            client.ws.send(message)
-'''
+            # print(resp, file=sys.stderr, flush=True)
+            print(res, file=sys.stderr, flush=True)
+            client.ws.send(res)
+
 # [END gae_flex_websockets_app]
 
 
@@ -184,7 +169,7 @@ def get_token():
     token = str(request.form['user_token'])
     email = str(request.form['user_email'])
     print(email)
-    #print(token)
+    # print(token)
     idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
     site = 'accounts.google.com'
     site1 = 'https://accounts.google.com'
@@ -196,12 +181,14 @@ def get_token():
     session["email"] = email
     return jsonify(success=True)
 
+
 @app.route('/get_topic', methods=['GET', 'POST'])
 def get_topic():
     topic = str(request.form['topic'])
     print(topic)
     session["topic"] = topic
     return redirect('/static/chatbox.html', code=302)
+
 
 if __name__ == '__main__':
     print("""
