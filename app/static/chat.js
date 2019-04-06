@@ -21,8 +21,6 @@ window.onload = function() {
     var topic = window.location.href;
     topic = topic.substr(-1, 8);
     //window.history.pushState("object or string", "Title", topic);
-
-    document.getElementById("topic").innerHTML = "Pancakes v.s. Waffles...Go!" //grab from db
     
     var scheme = window.location.protocol == "https:" ? 'wss://' : 'ws://';
     var webSocketUri =  scheme
@@ -36,10 +34,7 @@ window.onload = function() {
       websocket.onopen = function() {
         console.log('Connected');
         setTimeout(function(){
-            var signout = document.getElementById("signout").textContent.split(" ");
-            user_name = signout[signout.length-1];
-            //websocket.send(JSON.stringify([user_name, "has entered the chat"]))
-            websocket.send(JSON.stringify({type: "enter", msg: ""})) 
+            websocket.send(JSON.stringify({type: "enter", msg: ""}))
         }, 300);
         setTimeout(function(){modal.style.display = "block";}, 60000);
       };
@@ -56,11 +51,24 @@ window.onload = function() {
       };
 
       websocket.onmessage = function(e) {
-        console.log("message sent");
         data = JSON.parse(e.data);
-        name = data.name;
+        user_name = data.name;
         msg = data.msg;
-        console.log("Name: " + name);
+        topic = data.topic;
+
+        if(topic=="pancakes-waffles") {
+            document.getElementById("topic").innerHTML = "Are pancakes better than waffles? Go!"
+        } else if(topic=="milk-cereal") {
+            document.getElementById("topic").innerHTML = "Is Milk Cereal Sauce? Go!" 
+        } else if(topic=="Eat?") {
+            document.getElementById("topic").innerHTML = "If you were starving, would you eat the characters from Veggie Tales? Go!" 
+        } else if(topic=="Best Apocalypse") {
+            document.getElementById("topic").innerHTML = "Would a zombie apocalypse actually be kind of a good time? Go!"  
+        } else if (topic=="tvss") {
+            document.getElementById("topic").innerHTML = "Are tabs better than spaces? Go!"  
+        }
+
+        console.log("Name: " + user_name);
         console.log("Msg: " + msg);
         
         if(msg != "has entered the chat") {

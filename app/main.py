@@ -10,7 +10,7 @@ from flask import Flask, redirect, request, jsonify, session
 from google.cloud import datastore
 from flask_sockets import Sockets
 import sys
-from bson.json_util import loads, dumps
+import json
 
 from google.oauth2 import id_token
 from google.auth.transport import requests
@@ -69,7 +69,7 @@ def decide_request(req, uname, clients, room, ip, port):
         # person joined room, must take difference of new clients list and old
         # use to track person in room
         add_client(clients, room, uname, ip, port)
-        resp = {"name": uname, "msg": "has entered the chat"}
+        resp = {"name": uname, "msg": "has entered the chat", "topic": room}
     elif req_type == 'message':
         # someone is sending a message
         resp = {"name": uname, "msg": req['msg']}
@@ -81,7 +81,7 @@ def decide_request(req, uname, clients, room, ip, port):
             session['u_token']
         remove_client(uname, room)
 
-    return dumps(resp)
+    return json.dumps(resp)
 
 
 @sockets.route('/chat')
@@ -96,7 +96,7 @@ def chat_socket(ws):
         uname = session.get('email')
         client_ip = request.environ['REMOTE_ADDR']  # store IP of client
         client_port = request.environ['REMOTE_PORT']  # store port of client
-        msg = loads(message)  # convert to dict
+        msg = json.loads(message)  # convert to dict
         # now process message dependent on type + room, clients
         if ws.handler.server.clients:
             clients = ws.handler.server.clients
