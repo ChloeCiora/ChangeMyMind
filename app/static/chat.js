@@ -20,9 +20,9 @@ window.onload = function() {
             var signout = document.getElementById("signout").textContent.split(" ");
             user_name = signout[signout.length-1];
             //websocket.send(JSON.stringify([user_name, "has entered the chat"]))
-            websocket.send(JSON.stringify({type: "enter"})) 
+            websocket.send(JSON.stringify({type: "enter", msg: ""})) 
         }, 300);
-        //setTimeout(function(){modal.style.display = "block";}, 60000);
+        setTimeout(function(){modal.style.display = "block";}, 60000);
       };
       
       // Get the modal
@@ -34,12 +34,12 @@ var modal = document.getElementById('myModal');
       };
 
       websocket.onmessage = function(e) {
-          console.log("message sent");
-          /*
-        user_name = JSON.parse(e.data)[0];
-        msg = JSON.parse(e.data)[1];
-        console.log("Message received: " + e.data);
-        console.log(window.user_name);
+        console.log("message sent");
+        data = JSON.parse(e.data);
+        name = data.name;
+        msg = data.msg;
+        console.log("Name: " + name);
+        console.log("Msg: " + msg);
         
         if(msg != "has entered the chat") {
             var name = document.createElement("div");
@@ -74,7 +74,7 @@ var modal = document.getElementById('myModal');
 
             if(msg == document.getElementById("text-input").value) {
                 document.getElementById("text-input").value = "";
-            }
+            }   
 
             //Store chat in database
             //dbStore(window.debate_id, user_name, msg);
@@ -105,10 +105,10 @@ var modal = document.getElementById('myModal');
           if(msg.trim() != "") {
             var signout = document.getElementById("signout").textContent.split(" ");
             var user_name = signout[signout.length-1];
-            websocket.send( JSON.stringify([user_name, msg]));
+            websocket.send(JSON.stringify({"type": "message", "msg": msg}));
           }
 		}
-        */
+        
         document.getElementById("text-input")
         .addEventListener("keyup", function(event) {
             event.preventDefault();
@@ -147,5 +147,4 @@ function dbRetrieve(){
     }).done(function(data){
         console.log(data);
     });
-}
 }

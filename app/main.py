@@ -58,23 +58,21 @@ def decide_request(req, uname, clients, room, ip, port):
     resp = ""
     req_type = req['type']
     if req_type == 'enter':
-        print("enter", file=sys.stderr, flush=True)
         # person has joined room, must take difference of new clients list and old
         # use to track person in room
         add_client(clients, room, uname, ip, port)
-        resp = {'msg': uname + ' has entered the battle!', 'color': 'red', 'type': 'status'}
-        
-    elif req_type == 'text':
+        resp = {"name": uname, "msg": "has entered the chat"}
+    elif req_type == 'message':
         # someone is sending a message
-        resp = {'msg': uname + ': ' + req['msg'], 'color': 'blue', 'type': 'chat'}
+        resp = {"name": uname, "msg": req['msg']}
     elif req_type == 'leave':
         # someone leaving the room, remove from room client list to avoid issues, print status
         # also need to update sheet for leaving user, key = UID + title, IF NOT EMPTY
         if req['msg']:
             uid = session['u_token']
+        remove_client(uname, room)
 
-    remove_client(uname, room)
-    return dumps(resp) # convert JSON to string
+    return dumps(resp)
 
 # post to join room, store session data for user
 @app.route('/joinRoom', methods=['POST'])
@@ -92,26 +90,25 @@ def chat_socket(ws):
         #print(message, file=sys.stderr, flush=True)
         if message is None:  # message is "None" if the client has closed.
             continue
-    # store name of sender
-    session['name'] = "tma8520"
-    session['room'] = "pancakesvwaffles"
-    uname = session.get('name')
+        # store name of sender
+        session['name'] = "tma8520"
+        session['room'] = "pancakesvwaffles"
+        uname = session.get('name')
+        
+        client_ip = request.environ['REMOTE_ADDR'] # store IP of client
+        client_port = request.environ['REMOTE_PORT'] # store port of client
+        msg = loads(message) # convert to dict
+        # now process message dependent on type + room, clients
+        if ws.handler.server.clients:
+            clients = ws.handler.server.clients
+        room = session.get('room')
+        resp = decide_request(msg, uname, clients, room, client_ip, client_port)
 
-    
-    client_ip = request.environ['REMOTE_ADDR'] # store IP of client
-    client_port = request.environ['REMOTE_PORT'] # store port of client
-    msg = loads(message) # convert to dict
-    print(msg, file=sys.stderr, flush=True)
-    # now process message dependent on type + room, clients
-    if ws.handler.server.clients:
-        clients = ws.handler.server.clients
-    room = session.get('room')
-    resp = decide_request(msg, uname, clients, room, client_ip, client_port)
-
-    for client in r_to_client[room]:
-        print("sending", file=sys.stderr, flush=True)
-        #print(resp, file=sys.stderr, flush=True)
-        client.ws.send(resp)
+        for client in r_to_client[room]:
+            print("sending", file=sys.stderr, flush=True)
+            #print(resp, file=sys.stderr, flush=True)
+            print(resp, file=sys.stderr, flush=True)
+            client.ws.send(resp)
     
 '''
 @app.route('/chat')
