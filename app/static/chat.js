@@ -1,6 +1,8 @@
+
         function formHome(){
-            var modal = document.getElementById('myModal');
-            modal.style.display = "block";
+            var modal2 = document.getElementById('myModal');
+            modal2.style.display = "block";
+            websocket.send(JSON.stringify({type: "exit", msg: ""}))
         }
 		function onSignIn(){
 		  var profile = googleUser.getBasicProfile();
@@ -23,21 +25,21 @@
 window.onload = function() {     
     // Get the modal
     var modal = document.getElementById('myModal');
-    var button = document.getElementById("frontbutton")
-      
-    button.onclick = function (){
-        modal.style.display = "block";
-        websocket.send(JSON.stringify({type: "exit", msg: ""}))
-    }
-    
+    var button = document.getElementById("frontbutton");
     var scheme = window.location.protocol == "https:" ? 'wss://' : 'ws://';
     var webSocketUri =  scheme
                         + window.location.hostname
                         + (location.port ? ':'+location.port: '')
                         + '/chat';
+    var websocket = new WebSocket(webSocketUri);
+    button.onclick = function (){
+        modal.style.display = "block";
+        websocket.send(JSON.stringify({type: "exit", msg: ""}))
+    }
+    
 
       /* Establish the WebSocket connection and register event handlers. */
-      var websocket = new WebSocket(webSocketUri);
+      
 
       websocket.onopen = function() {
         console.log('Connected');
