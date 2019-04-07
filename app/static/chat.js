@@ -1,4 +1,7 @@
-
+        function formHome(){
+            var modal = document.getElementById('myModal');
+            modal.style.display = "block";
+        }
 		function onSignIn(){
 		  var profile = googleUser.getBasicProfile();
 		  document.getElementById('profileinfo').innerHTML = profile.getName() + "<br>"
