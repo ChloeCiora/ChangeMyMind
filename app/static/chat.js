@@ -109,7 +109,7 @@ window.onload = function() {
             }   
 
             //Store chat in database
-            //dbStore(window.debate_id, user_name, msg);
+            dbStore(user_name, 1);
             //dbRetrieve();
         }
         else {
@@ -148,14 +148,13 @@ window.onload = function() {
         });
 }
 
-function dbStore(debate_id, user, transcript){
+function dbStore(user, add_points){
     //console.log("Stored: " + debate_id + " " + user + " " + transcript)
     $.ajax({
-        type: "GET",
-        url: "/webservice",
-        data: { debate_id: debate_id, 
-            user: user, 
-            transcript: transcript },
+        type: "POST",
+        url: "/put_debate",
+        data: { user: user, 
+            add_points: add_points},
         success: function(response) {
             console.log(response);
         }

@@ -104,18 +104,22 @@ def my_webservice():
 
 
 @app.route('/put_debate', methods=['GET', 'POST'])
-def put_debate(debate_id, user, transcript):
-    '''
-    ds = get_client()
-    task_key = ds.key("debate") # unique ID for this entity
-    task = datastore.Entity(key=task_key)
-    task["debate_id"] = debate_id
-    task["user"] = user
-    task["transcript"] = transcript
-    ds.put(task)
-    return task
-    '''
-
+def put_debate():
+    #get arguments
+    user = str(request.form['user'])
+    add_points = int(request.form['add_points'])
+    #init the client
+    ds = datastore.Client()
+    user_key = ds.key("users", user)
+    entry = ds.get(user_key) #try to get the user_key
+    print("got the entry")
+    if entry == None: #if not init, then create an entry
+        entry = datastore.Entity(key=user_key)
+        entry["points"] = add_points
+    else:
+        entry["points"] += add_points
+    ds.put(entry)
+    return jsonify(success=True)
 
 @app.route('/get_debate', methods=['GET', 'POST'])
 def get_debates():
