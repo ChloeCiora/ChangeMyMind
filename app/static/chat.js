@@ -1,7 +1,7 @@
 
         function formHome(){
-            var modal2 = document.getElementById('myModal');
-            modal2.style.display = "block";
+            var modal = document.getElementById('myModal');
+            modal.style.display = "block";
             websocket.send(JSON.stringify({type: "exit", msg: ""}))
         }
 		function onSignIn(){
@@ -10,17 +10,10 @@
           document.getElementById("username").innerHTML = profile.getName() 
           
 		}
-		function signOut() {
-		  var auth2 = gapi.auth2.getAuthInstance();
-          const signoutElement = document.getElementById('signout');
-		  signoutElement.innerHTML =
-			  'Sign out'
-		  auth2.signOut();
-		}
 		function onSignedIn(googleUser) {
-		  const signoutElement = document.getElementById('signout');
+		  const signoutElement = document.getElementById('username');
 		  signoutElement.innerHTML =
-			  'Sign out ' + googleUser.getBasicProfile().getEmail();
+			  googleUser.getBasicProfile().getEmail();
 		}
 window.onload = function() {     
     // Get the modal
@@ -47,7 +40,7 @@ window.onload = function() {
             websocket.send(JSON.stringify({type: "enter", msg: ""}))
         }, 300);
         setTimeout(function(){modal.style.display = "block";}, 60000);
-      };
+      }
 
       websocket.onclose = function() {
         console.log('Closed');
@@ -81,7 +74,13 @@ window.onload = function() {
             var conv = document.getElementById("conv");
 
             name.innerHTML = user_name;
-            name.style.textAlign = "left";
+            var comp = document.getElementById("username").innerHTML;
+            if(comp == user_name){
+                name.style.textAlign = "right";
+            }
+            else {
+                name.style.textAlign = "left";
+            }
             name.style.marginTop = "1px";
             name.style.color = "grey";
             name.style.fontSize = "10";
@@ -94,7 +93,15 @@ window.onload = function() {
             bubble.style.wordWrap = "normal";
             bubble.style.borderRadius = "10px";
             bubble.style.padding = "7px";
-            bubble.style.marginLeft = "5px";
+            var comp = document.getElementById("username").innerHTML;
+            if(comp == user_name){
+                bubble.style.marginLeft = "auto";
+		        bubble.style.marginRight = "0px";
+            }
+            else{
+                bubble.style.marginRight = "auto";
+		        bubble.style.marginLeft = "0px";
+            }
             bubble.style.marginTop = "1px";
             bubble.style.maxWidth = "90%";
             bubble.style.background = "#6666ff";
