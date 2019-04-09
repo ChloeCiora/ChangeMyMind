@@ -62,7 +62,10 @@ def decide_request(req, name, clients, topic, ip, port):
     elif request == 'message':
         res = {"name": name, "msg": req['msg'], "topic": topic, "num_clients": len(clients)}
     elif request == 'exit':
-        res = {"name": name, "msg": "has left the chat", "topic": topic, "num_clients": len(clients)}
+        if len(clients) <= 2:
+            res = {"name": name, "msg": "has left the chat", "topic": topic, "num_clients": len(clients)}
+        else:
+            res = {"name": "A spectator", "msg": "has left the chat", "topic": topic, "num_clients": len(clients)}
         remove_client(name, topic)
     return json.dumps(res)
 

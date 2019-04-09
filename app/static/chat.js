@@ -19,7 +19,7 @@ window.onload = function() {
     var modal = document.getElementById('myModal');
     var button = document.getElementById("frontbutton");
     var scheme = window.location.protocol == "https:" ? 'wss://' : 'ws://';
-    window.num_clients = 0;
+    window.client_num = 0;
     var webSocketUri =  scheme
                         + window.location.hostname
                         + (location.port ? ':'+location.port: '')
@@ -37,7 +37,6 @@ window.onload = function() {
       websocket.onopen = function() {
         console.log('Connected');
         websocket.send(JSON.stringify({type: "enter", msg: ""}))
-        setTimeout(function(){modal.style.display = "block";}, 60000);
       }
 
       websocket.onclose = function() {
@@ -51,9 +50,14 @@ window.onload = function() {
         msg = data.msg;
         topic = data.topic;
 
-        if(window.num_clients == 0) {
-            window.num_clients = data.num_clients;
-            console.log("Num_clients: " + data.num_clients)
+        //Set client number 
+        if(window.client_num == 0) {
+            window.client_num = data.num_clients;
+            console.log("Client num: " + data.num_clients)
+        } 
+
+        if(window.client_num <= 2) {
+            setTimeout(function(){modal.style.display = "block";}, 200000);
         }
 
         if(topic=="pancakes-waffles") {
@@ -100,18 +104,15 @@ window.onload = function() {
             if(comp == user_name){
                 bubble.style.marginLeft = "auto";
 		        bubble.style.marginRight = "0px";
-                bubble.style.background = "#f9f9f9";
-                bubble.style.color = "black";
             }
             else{
                 bubble.style.marginRight = "auto";
 		        bubble.style.marginLeft = "0px";
-                bubble.style.background = "#6666ff";
-                bubble.style.color = "white";
             }
             bubble.style.marginTop = "1px";
             bubble.style.maxWidth = "90%";
-            
+            bubble.style.background = "#6666ff";
+            bubble.style.color = "white";
 
             conv.append(name);
             conv.appendChild(bubble);
@@ -146,7 +147,7 @@ window.onload = function() {
       document.getElementById("send-btn").onclick = function fun(e) {
           e.preventDefault();
           msg = document.getElementById("text-input").value;
-          if(msg.trim() != "" && window.num_clients <= 2) {
+          if(msg.trim() != "" && window.client_num <= 2) {
             websocket.send(JSON.stringify({"type": "message", "msg": msg}));
           }
 		}
