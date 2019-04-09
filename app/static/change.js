@@ -107,9 +107,6 @@ window.onload = function() {
         slideIndex++;
         if (slideIndex > slides.length) {slideIndex = 1}    
         slides[slideIndex-1].style.display = "block";  
-        slides[slideIndex-1].style.marginLeft = "auto";
-        slides[slideIndex-1].style.marginRight = "auto";
         setTimeout(showSlides, 5000); // Change image every 2 seconds
     }  
-}
-// When the user clicks the button, open the modal 
+} 
