@@ -15,6 +15,9 @@ import os
 import asyncio
 from google.oauth2 import id_token
 from google.auth.transport import requests
+
+import subprocess
+
 a = "739915422482-gmra2df2r5tvlp0aktbt6l8pvb9gndfr.apps.googleusercontent.com"
 CLIENT_ID = a
 u_to_client = {}                  # map users to Client object
@@ -111,13 +114,21 @@ def my_webservice():
 
 
 @app.route('/put_debate', methods=['GET', 'POST'])
-def put_debate():
+def put_points():
     #get arguments
     user = str(request.form['user'])
     add_points = str(request.form['add_points'])
     #init the client
-    os.system('python3 database.py ' + user + " " + add_points)
+    os.system('python3 database.py put_points ' + user + " " + add_points)
     return jsonify(success=True)
+
+
+@app.route('/get_points', methods = ['GET', 'POST'])
+def get_points():
+    user = session["email"]
+    points = subprocess.check_output('python3 database.py get_points ' + user, shell=True)
+    print(points)
+    return str(points)
 
 @app.route('/get_debate', methods=['GET', 'POST'])
 def get_debates():

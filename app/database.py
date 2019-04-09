@@ -14,5 +14,18 @@ def put_points(user, points):
     else:
         entry["points"] += add_points
     ds.put(entry)
+
+def get_points(user):
+    ds = datastore.Client.from_service_account_json("service-acct-keys.json")
+    user_key = ds.key("users", user)
+    entry = ds.get(user_key)
+    if entry is None:
+        return 0
+    else:
+        return entry["points"]
+
 if __name__ == "__main__":
-    put_points(sys.argv[1], sys.argv[2])
+    if sys.argv[1] == "put_points":
+        put_points(sys.argv[2], sys.argv[3])
+    elif sys.argv[1] == "get_points":
+        print(get_points(sys.argv[2]))
