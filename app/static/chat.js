@@ -1,21 +1,23 @@
 
-		function onSignIn(){
-		  var profile = googleUser.getBasicProfile();
-		  document.getElementById('profileinfo').innerHTML = profile.getName() + "<br>"
-          document.getElementById("username").innerHTML = profile.getName() 
-          
-		}
-		function onSignedIn(googleUser) {
-		  const signoutElement = document.getElementById('username');
-		  signoutElement.innerHTML =
-			  googleUser.getBasicProfile().getEmail();
-		}
+function onSignIn(){
+    var profile = googleUser.getBasicProfile();
+    document.getElementById('profileinfo').innerHTML = profile.getName() + "<br>"
+    document.getElementById("username").innerHTML = profile.getName() 
+    
+}
+function onSignedIn(googleUser) {
+    const signoutElement = document.getElementById('username');
+    signoutElement.innerHTML =
+        googleUser.getBasicProfile().getEmail();
+}
+
 window.onload = function() {     
     // Get the modal
     var modal = document.getElementById('myModal');
     var button = document.getElementById("frontbutton");
     var button1 = document.getElementById("home");
     var scheme = window.location.protocol == "https:" ? 'wss://' : 'ws://';
+    window.num_clients = 0;
     var webSocketUri =  scheme
                         + window.location.hostname
                         + (location.port ? ':'+location.port: '')
@@ -36,9 +38,7 @@ window.onload = function() {
 
       websocket.onopen = function() {
         console.log('Connected');
-        setTimeout(function(){
-            websocket.send(JSON.stringify({type: "enter", msg: ""}))
-        }, 300);
+        websocket.send(JSON.stringify({type: "enter", msg: ""}))
         setTimeout(function(){modal.style.display = "block";}, 60000);
       }
 
@@ -52,6 +52,11 @@ window.onload = function() {
         user_name = data.name;
         msg = data.msg;
         topic = data.topic;
+
+        if(window.num_clients == 0) {
+            window.num_clients = data.num_clients;
+            console.log("Num_clients: " + data.num_clients)
+        }
 
         if(topic=="pancakes-waffles") {
             document.getElementById("topic").innerHTML = "Are pancakes better than waffles? Go!"
@@ -72,9 +77,9 @@ window.onload = function() {
             var name = document.createElement("div");
             var bubble = document.createElement("div");
             var conv = document.getElementById("conv");
-
             name.innerHTML = user_name;
             var comp = document.getElementById("username").innerHTML;
+            
             if(comp == user_name){
                 name.style.textAlign = "right";
             }
@@ -84,7 +89,6 @@ window.onload = function() {
             name.style.marginTop = "1px";
             name.style.color = "grey";
             name.style.fontSize = "10";
-
             bubble.innerHTML = msg;
             bubble.style.width = "auto";
             bubble.style.height = "auto";
@@ -93,6 +97,7 @@ window.onload = function() {
             bubble.style.wordWrap = "normal";
             bubble.style.borderRadius = "10px";
             bubble.style.padding = "7px";
+
             var comp = document.getElementById("username").innerHTML;
             if(comp == user_name){
                 bubble.style.marginLeft = "auto";
@@ -140,11 +145,10 @@ window.onload = function() {
         console.log(e.data);
       };
 
-      window.debate_id = 1
       document.getElementById("send-btn").onclick = function fun(e) {
           e.preventDefault();
           msg = document.getElementById("text-input").value;
-          if(msg.trim() != "") {
+          if(msg.trim() != "" && window.num_clients <= 2) {
             websocket.send(JSON.stringify({"type": "message", "msg": msg}));
           }
 		}
