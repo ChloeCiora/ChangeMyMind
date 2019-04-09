@@ -73,15 +73,25 @@ window.onload = function() {
         }
 
         if(topic=="pancakes-waffles") {
-            document.getElementById("topic").innerHTML = "Are pancakes better than waffles? Go!"
+            const top = document.getElementById("topic")
+            top.innerHTML = "Are pancakes better than waffles? Go!"
+            top.style.color = "#404040"
         } else if(topic=="milk-cereal") {
-            document.getElementById("topic").innerHTML = "Is Milk Cereal Sauce? Go!" 
+            const top = document.getElementById("topic")
+            top.innerHTML = "Is Milk Cereal Sauce? Go!" 
+            top.style.color = "#404040"
         } else if(topic=="Eat?") {
-            document.getElementById("topic").innerHTML = "If you were starving, would you eat the characters from Veggie Tales? Go!" 
+            const top = document.getElementById("topic")
+            top.innerHTML = "If you were starving, would you eat the characters from Veggie Tales? Go!" 
+            top.style.color = "#404040"
         } else if(topic=="Best Apocalypse") {
-            document.getElementById("topic").innerHTML = "Would a zombie apocalypse actually be kind of a good time? Go!"  
+            const top = document.getElementById("topic")
+            top.innerHTML = "Would a zombie apocalypse actually be kind of a good time? Go!"
+            top.style.color = "#404040"  
         } else if (topic=="tvss") {
-            document.getElementById("topic").innerHTML = "Are tabs better than spaces? Go!"  
+            const top = document.getElementById("topic")
+            top.innerHTML = "Are tabs better than spaces? Go!" 
+            top.style.color = "#404040" 
         }
 
         console.log("Name: " + user_name);
