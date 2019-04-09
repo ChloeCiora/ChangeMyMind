@@ -1,8 +1,4 @@
-function formHome(){
-    var modal = document.getElementById('myModal');
-    modal.style.display = "block";
-    websocket.send(JSON.stringify({type: "exit", msg: ""}))
-}
+
 function onSignIn(){
     var profile = googleUser.getBasicProfile();
     document.getElementById('profileinfo').innerHTML = profile.getName() + "<br>"
@@ -14,10 +10,12 @@ function onSignedIn(googleUser) {
     signoutElement.innerHTML =
         googleUser.getBasicProfile().getEmail();
 }
+
 window.onload = function() {     
     // Get the modal
     var modal = document.getElementById('myModal');
     var button = document.getElementById("frontbutton");
+    var button1 = document.getElementById("home");
     var scheme = window.location.protocol == "https:" ? 'wss://' : 'ws://';
     window.client_num = 0;
     var webSocketUri =  scheme
@@ -26,6 +24,10 @@ window.onload = function() {
                         + '/chat';
     var websocket = new WebSocket(webSocketUri);
     button.onclick = function (){
+        modal.style.display = "block";
+        websocket.send(JSON.stringify({type: "exit", msg: ""}))
+    }
+    button1.onclick = function (){
         modal.style.display = "block";
         websocket.send(JSON.stringify({type: "exit", msg: ""}))
     }
@@ -123,7 +125,7 @@ window.onload = function() {
             }   
 
             //Store chat in database
-            //dbStore(user_name, 1);
+            // dbStore(user_name, 1);
             //dbRetrieve();
         }
         else {
