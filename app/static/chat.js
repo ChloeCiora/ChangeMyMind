@@ -1,8 +1,3 @@
-function formHome(){
-    var modal = document.getElementById('myModal');
-    modal.style.display = "block";
-    websocket.send(JSON.stringify({type: "exit", msg: ""}))
-}
 function onSignIn(){
     var profile = googleUser.getBasicProfile();
     document.getElementById('profileinfo').innerHTML = profile.getName() + "<br>"
@@ -19,9 +14,17 @@ window.onload = function() {
     // Get the modal
     var modal = document.getElementById('myModal');
     var button = document.getElementById("frontbutton");
+    var button1 = document.getElementById("home");
+
     window.client_num = 0;
 
     button.onclick = function (){
+        if(window.client_num <= 2) {
+            modal.style.display = "block";
+            websocket.send(JSON.stringify({type: "exit", msg: ""}))
+        }
+    }
+    button1.onclick = function (){
         if(window.client_num <= 2) {
             modal.style.display = "block";
             websocket.send(JSON.stringify({type: "exit", msg: ""}))
