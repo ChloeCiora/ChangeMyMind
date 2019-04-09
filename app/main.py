@@ -11,7 +11,7 @@ from google.cloud import datastore
 from flask_sockets import Sockets
 import sys
 import json
-
+import asyncio
 from google.oauth2 import id_token
 from google.auth.transport import requests
 a = "739915422482-gmra2df2r5tvlp0aktbt6l8pvb9gndfr.apps.googleusercontent.com"
@@ -32,6 +32,7 @@ def add_client(clients, topic, name, ip, port):
     for ip_tuple in list(clients.keys()):
         if ip_tuple == client_tuple:
             print('New client', file=sys.stderr, flush=True)
+            print(clients, file=sys.stderr, flush=True)
             found_client = clients[ip_tuple]
             u_to_client[name] = found_client
             r_to_client[topic].append(found_client)
@@ -46,8 +47,7 @@ def remove_client(name, room):
         print('removing client', file=sys.stderr, flush=True)
         r_to_client[room].remove(to_rem)
     if not r_to_client[room]:
-        print('room ' + room + ' is empty!', file=sys.stderr, flush=True)
-        r_to_client.pop(room)  # remove room
+        r_to_client.pop(room)
 
 
 def decide_request(req, name, clients, topic, ip, port):
@@ -57,7 +57,7 @@ def decide_request(req, name, clients, topic, ip, port):
         add_client(clients, topic, name, ip, port)
         if len(clients) <= 2:
             res = {"name": name, "msg": "has entered the chat", "topic": topic, "num_clients": len(clients)}
-        else: 
+        else:
             res = {"name": "A spectator", "msg": "has entered the chat", "topic": topic, "num_clients": len(clients)}
     elif request == 'message':
         res = {"name": name, "msg": req['msg'], "topic": topic, "num_clients": len(clients)}

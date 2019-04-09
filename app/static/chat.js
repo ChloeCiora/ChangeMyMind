@@ -14,18 +14,13 @@ function onSignedIn(googleUser) {
     signoutElement.innerHTML =
         googleUser.getBasicProfile().getEmail();
 }
+
 window.onload = function() {     
     // Get the modal
     var modal = document.getElementById('myModal');
     var button = document.getElementById("frontbutton");
-    var scheme = window.location.protocol == "https:" ? 'wss://' : 'ws://';
     window.client_num = 0;
-    var webSocketUri =  scheme
-                        + window.location.hostname
-                        + (location.port ? ':'+location.port: '')
-                        + '/chat';
-    var websocket = new WebSocket(webSocketUri);
-    
+
     button.onclick = function (){
         if(window.client_num <= 2) {
             modal.style.display = "block";
@@ -33,18 +28,32 @@ window.onload = function() {
         }
     }
 
-      /* Establish the WebSocket connection and register event handlers. */
-      websocket.onopen = function() {
+    // Create new websocket
+    var scheme = window.location.protocol == "https:" ? 'wss://' : 'ws://';
+    var webSocketUri =  scheme
+            + window.location.hostname
+            + (location.port ? ':'+location.port: '')
+            + '/chat';
+    var websocket = new WebSocket(webSocketUri);
+
+    /* Establish the WebSocket connection and register event handlers. */
+    websocket.onopen = function() {
         console.log('Connected');
         websocket.send(JSON.stringify({type: "enter", msg: ""}))
-      }
+    }
 
-      websocket.onclose = function() {
+    websocket.onclose = function() {
         console.log('Closed');
         websocket.send(JSON.stringify({type: "exit", msg: ""}))
-      };
+    };
 
-      websocket.onmessage = function(e) {
+   window.onbeforeunload = function() {
+        console.log('Closed');
+        websocket.send(JSON.stringify({type: "exit", msg: ""}))
+        websocket.close();
+    }; 
+
+    websocket.onmessage = function(e) {
         data = JSON.parse(e.data);
         user_name = data.name;
         msg = data.msg;
@@ -159,7 +168,7 @@ window.onload = function() {
                 document.getElementById("send-btn").click();
             }
         });
-}
+    }
 
 function dbStore(user, add_points){
     //console.log("Stored: " + debate_id + " " + user + " " + transcript)
