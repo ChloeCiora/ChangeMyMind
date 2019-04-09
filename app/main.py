@@ -11,6 +11,7 @@ from google.cloud import datastore
 from flask_sockets import Sockets
 import sys
 import json
+import os
 
 from google.oauth2 import id_token
 from google.auth.transport import requests
@@ -107,18 +108,9 @@ def my_webservice():
 def put_debate():
     #get arguments
     user = str(request.form['user'])
-    add_points = int(request.form['add_points'])
+    add_points = str(request.form['add_points'])
     #init the client
-    ds = datastore.Client()
-    user_key = ds.key("users", user)
-    entry = ds.get(user_key) #try to get the user_key
-    print("got the entry")
-    if entry == None: #if not init, then create an entry
-        entry = datastore.Entity(key=user_key)
-        entry["points"] = add_points
-    else:
-        entry["points"] += add_points
-    ds.put(entry)
+    os.system('python3 database.py ' + user + " " + add_points)
     return jsonify(success=True)
 
 @app.route('/get_debate', methods=['GET', 'POST'])

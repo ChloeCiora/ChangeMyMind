@@ -1,20 +1,18 @@
 from google.cloud import datastore
-
-def get_client():
-    return datastore.Client()
-
-def put_debate(id, user, transcript):
-    ds = get_client()
-    task_key = ds.key("debate", id) # unique ID for this entity
-    task = datastore.Entity(key=task_key)
-    task["user"] = user
-    task["transcript"] = transcript
-    ds.put(task)
-    return task
-
-def get_debates():
-    ds = get_client()
-    return str(list(ds.query(kind="debate").fetch()))
-
-
-#print([result for result in ds.query(kind="Example").fetch()])
+import sys
+def put_points(user, points):
+    add_points = int(points)
+    ds = datastore.Client.from_service_account_json("service-acct-keys.json")
+    print("datastore is loaded.")
+    user_key = ds.key("users", user)
+    print("user key is created.")
+    entry = ds.get(user_key) #try to get the user_key
+    print("got the entry") #doesn't get to this point
+    if entry == None: #if not init, then create an entry
+        entry = datastore.Entity(key=user_key)
+        entry["points"] = add_points
+    else:
+        entry["points"] += add_points
+    ds.put(entry)
+if __name__ == "__main__":
+    put_points(sys.argv[1], sys.argv[2])
