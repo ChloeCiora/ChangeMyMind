@@ -47,6 +47,7 @@ window.onload = function() {
 
     websocket.onclose = function() {
         console.log('Closed');
+        dbStore(user_name, 1); //why not
         websocket.send(JSON.stringify({type: "exit", msg: ""}))
     };
 
@@ -145,7 +146,6 @@ window.onload = function() {
             }   
 
             //Store chat in database
-            //dbStore(user_name, 1);
             //dbRetrieve();
         }
         else {
