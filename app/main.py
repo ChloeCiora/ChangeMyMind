@@ -127,8 +127,9 @@ def put_points():
 def get_points():
     user = session["email"]
     points = subprocess.check_output('python3 database.py get_points ' + user, shell=True)
-    print(points)
-    return str(points)
+    points = points.decode("utf-8").strip()
+    print(user, points)
+    return json.dumps({"user": user, "points": points})
 
 @app.route('/get_debate', methods=['GET', 'POST'])
 def get_debates():
