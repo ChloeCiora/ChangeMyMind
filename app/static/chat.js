@@ -127,15 +127,18 @@ window.onload = function() {
             if(comp == user_name){
                 bubble.style.marginLeft = "auto";
 		        bubble.style.marginRight = "0px";
+                bubble.style.background = "#f9f9f9";
+                bubble.style.color = "#404040";
             }
             else{
                 bubble.style.marginRight = "auto";
 		        bubble.style.marginLeft = "0px";
+                bubble.style.background = "#6666ff";
+                bubble.style.color = "white";
             }
             bubble.style.marginTop = "1px";
             bubble.style.maxWidth = "90%";
-            bubble.style.background = "#6666ff";
-            bubble.style.color = "white";
+            
 
             conv.append(name);
             conv.appendChild(bubble);
