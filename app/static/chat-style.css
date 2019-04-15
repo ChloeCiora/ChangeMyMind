@@ -36,11 +36,11 @@
 	position: absolute;
 	right: 2px;
 	bottom: 5px;
-  background-color: #B1A296; /* Green */
-  border-radius: 8px;
-  color: white;
-  text-align: center;
-  display: inline-block;
+    background-color: #B1A296; /* Green */
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    display: inline-block;
 }
 *{box-sizing: border-box;}
 .mySlides {
@@ -75,12 +75,17 @@ img {
   margin: auto;
 }
 
-#prof_cont {
+.prof_cont {
     margin: auto;
     background-color: white;
     border-radius: 20px;
-    width: 40%;
+    width: 35%;
     height: 500px;
+}
+
+#username {
+    font-size: 16;
+    font-family: sans-serif;
 }
 
 /* Fading animation */
