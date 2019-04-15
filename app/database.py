@@ -2,7 +2,7 @@ from google.cloud import datastore
 import sys
 def put_points(user, points):
     add_points = int(points)
-    ds = datastore.Client.from_service_account_json("service-acct-keys.json")
+    ds = datastore.Client()
     print("datastore is loaded.")
     user_key = ds.key("users", user)
     print("user key is created.")
@@ -16,7 +16,7 @@ def put_points(user, points):
     ds.put(entry)
 
 def get_points(user):
-    ds = datastore.Client.from_service_account_json("service-acct-keys.json")
+    ds = datastore.Client()
     user_key = ds.key("users", user)
     entry = ds.get(user_key)
     if entry is None:
