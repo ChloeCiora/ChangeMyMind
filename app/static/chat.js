@@ -23,11 +23,17 @@ window.onload = function() {
             modal.style.display = "block";
             websocket.send(JSON.stringify({type: "exit", msg: ""}))
         }
+        else{
+            document.location.href="ChangeMyMind.html";
+        }
     }
     button1.onclick = function (){
         if(window.client_num <= 2) {
             modal.style.display = "block";
             websocket.send(JSON.stringify({type: "exit", msg: ""}))
+        }
+        else{
+            document.location.href="ChangeMyMind.html";
         }
     }
 
